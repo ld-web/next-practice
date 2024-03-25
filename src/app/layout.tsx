@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
+import GithubIcon from "@/components/utils/GithubIcon";
 
 const inter = Raleway({ subsets: ["latin"] });
 
@@ -15,8 +17,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.className} dark:bg-slate-800 dark:text-gray-200 px-2 pb-10`}
+      >
+        <ThemeProvider enableSystem attribute="class">
+          {children}
+          <footer className="text-center flex justify-center gap-x-4">
+            LD-WEB
+            <a href="https://github.com/ld-web" target="_blank">
+              <GithubIcon />
+            </a>
+          </footer>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

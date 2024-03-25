@@ -1,77 +1,40 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import AceEditor from "react-ace";
-import Loading from "@/components/utils/Loading";
-
-import "ace-builds/src-noconflict/mode-php";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
+import { useEffect, useState } from "react";
+//@ts-expect-error
+import { PhpWeb } from "php-wasm/PhpWeb.mjs";
+import { PhpContext } from "@/context/PhpContext";
+import ThemeSwitcher from "@/components/utils/ThemeSwitcher";
+import DisplayElement from "@/components/exercises/php/arrays/DisplayElement";
 
 export default function Exercises() {
-  const [code, setCode] = useState(`<?php
+  const [phpWasm, setPhpWasm] = useState<PhpWeb | null>(null);
 
-echo "Hello world !";
-`);
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const php = new PhpWeb();
+    setPhpWasm(php);
 
-  const onCodeChange = (value: string) => setCode(value);
-
-  const submitCode = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const res = await fetch("/api/php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code }),
+    php.addEventListener("ready", () => {
+      if (process.env.NODE_ENV === "development") {
+        console.log("php-wasm ready");
+      }
     });
-    console.log(await res.json());
-
-    setLoading(false);
-  };
+  }, []);
 
   return (
     <section className="max-w-[900px] mx-auto mt-6">
-      <header className="mb-16">
-        <h2 className="text-center text-4xl uppercase">PHP - Exercices</h2>
+      <header className="mb-6 md:mb-12 flex justify-between items-center">
+        <h1 className="text-3xl md:text-5xl uppercase">PHP - Exercices</h1>
+        <ThemeSwitcher />
       </header>
 
-      <form onSubmit={submitCode}>
-        <div>
-          <AceEditor
-            placeholder="Code Editor"
-            mode="php"
-            theme="monokai"
-            name="code"
-            fontSize={24}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
-            value={code}
-            onChange={onCodeChange}
-            setOptions={{
-              enableBasicAutocompletion: false,
-              enableLiveAutocompletion: true,
-              enableSnippets: false,
-              showLineNumbers: true,
-              tabSize: 2,
-            }}
-            width="100%"
-          />
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-3 hover:bg-green-700 w-full font-bold uppercase py-4 text-xl flex justify-center disabled:bg-gray-400"
-            disabled={loading}
-          >
-            {loading ? <Loading /> : "Évaluer"}
-          </button>
-        </div>
-      </form>
+      <PhpContext.Provider value={phpWasm}>
+        <h2 className="text-2xl md:text-4xl border-b mb-5">Les tableaux</h2>
+
+        <DisplayElement />
+        <DisplayElement />
+        <DisplayElement />
+      </PhpContext.Provider>
     </section>
   );
 }
