@@ -1,18 +1,35 @@
-import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import PhpEditor from "../editor/PhpEditor";
 import { PhpContext } from "@/context/PhpContext";
 import CheckBadge from "../utils/CheckBadge";
+import ExclamationCircle from "../utils/ExclamationCircle";
+import LightBulb from "../utils/LightBulb";
 
 interface PhpPracticeProps {
   initialCode: string;
+  hint?: ReactNode;
+  checkCode: (code: string) => boolean;
   checkOutput: (output: string[]) => boolean;
 }
 
-const PhpPractice = ({ initialCode, checkOutput }: PhpPracticeProps) => {
+const PhpPractice = ({
+  initialCode,
+  hint,
+  checkCode,
+  checkOutput,
+}: PhpPracticeProps) => {
   const [output, setOutput] = useState<string[]>([]);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState<boolean | null>(null);
   const [code, setCode] = useState(initialCode);
+  const [displayHint, setDisplayHint] = useState(false);
 
   const php = useContext(PhpContext);
 
@@ -49,13 +66,21 @@ const PhpPractice = ({ initialCode, checkOutput }: PhpPracticeProps) => {
     }
 
     setOutput([]);
+    setDisplayHint(false);
     setError(false);
     setSuccess(null);
-    // beforeExecute(code);
-    const retVal: any = await php.run(code);
-    if (retVal > 0) {
-      setError(true);
+    if (checkCode(code)) {
+      const retVal: any = await php.run(code);
+      if (retVal > 0) {
+        setError(true);
+      }
+    } else {
+      if (hint) {
+        setDisplayHint(true);
+      }
+      setSuccess(false);
     }
+
     if (php) {
       php.removeEventListener("output", feedOutput);
     }
@@ -73,13 +98,22 @@ const PhpPractice = ({ initialCode, checkOutput }: PhpPracticeProps) => {
             className={`${cssClasses} px-3 text-white w-full font-bold uppercase py-4 text-xl flex justify-center items-center disabled:bg-gray-400 transition-all duration-300`}
           >
             {success && <CheckBadge />}
-            Tester
+            {success === false && <ExclamationCircle />}
+            {success ? "OK" : "Tester"}
           </button>
         </div>
       </form>
+      {displayHint && (
+        <div className="mt-2 bg-blue-600 p-3 text-gray-200 flex items-start gap-x-2">
+          <span>
+            <LightBulb />
+          </span>
+          <div className="hint">{hint}</div>
+        </div>
+      )}
       {output.length > 0 && (
         <pre
-          className={`max-w-full text-wrap mt-2 border-[1px] p-3 border-gray-500 leading-5${
+          className={`max-w-full text-wrap mt-2 border-[1px] p-3 border-gray-500 leading-5 max-h-72 overflow-y-scroll${
             error ? " border-red-600 text-red-600 bg-red-100 font-bold" : ""
           }`}
         >

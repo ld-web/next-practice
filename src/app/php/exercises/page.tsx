@@ -6,6 +6,11 @@ import { PhpWeb } from "php-wasm/PhpWeb.mjs";
 import { PhpContext } from "@/context/PhpContext";
 import ThemeSwitcher from "@/components/utils/ThemeSwitcher";
 import DisplayElement from "@/components/exercises/php/arrays/DisplayElement";
+import DisplayFirstElement from "@/components/exercises/php/arrays/DisplayFirstElement";
+import DisplayLastElement from "@/components/exercises/php/arrays/DisplayLastElement";
+import Link from "next/link";
+import Anchor from "@/components/utils/Anchor";
+import ForLoop from "@/components/exercises/php/loops/ForLoop";
 
 export default function Exercises() {
   const [phpWasm, setPhpWasm] = useState<PhpWeb | null>(null);
@@ -29,11 +34,19 @@ export default function Exercises() {
       </header>
 
       <PhpContext.Provider value={phpWasm}>
-        <h2 className="text-2xl md:text-4xl border-b mb-5">Les tableaux</h2>
+        <h2 className="text-2xl md:text-4xl border-b mb-5" id="les-tableaux">
+          Les tableaux <Anchor id="les-tableaux" />
+        </h2>
 
+        <DisplayFirstElement />
         <DisplayElement />
-        <DisplayElement />
-        <DisplayElement />
+        <DisplayLastElement />
+
+        <h2 className="text-2xl md:text-4xl border-b mb-5" id="les-boucles">
+          Les boucles <Anchor id="les-boucles" />
+        </h2>
+
+        <ForLoop />
       </PhpContext.Provider>
     </section>
   );

@@ -5,3 +5,11 @@
 html {
   font-size: 18px;
 }
+
+.hint a {
+  @apply bg-blue-500 p-[0.15rem] underline hover:bg-gray-700 transition-all;
+}
+
+.hint ul {
+  @apply list-disc ml-4;
+}

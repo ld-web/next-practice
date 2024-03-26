@@ -19,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} dark:bg-slate-800 dark:text-gray-200 px-2 pb-10`}
+        className={`${inter.className} text-gray-900 dark:bg-slate-800 dark:text-gray-200 px-2 pb-10`}
       >
-        <ThemeProvider enableSystem attribute="class">
+        <ThemeProvider enableSystem attribute="class" defaultTheme="dark">
           {children}
           <footer className="text-center flex justify-center gap-x-4">
             LD-WEB
