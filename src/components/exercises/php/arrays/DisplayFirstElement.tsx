@@ -7,7 +7,7 @@ $notes = [1, 16, 7, 18, 6, 12, 14, 20];
 `;
 
 const Hint = () => (
-  <div>Rappelez-vous que les index sont numérotés à patir de 0</div>
+  <div>Rappelez-vous que les index sont numérotés à partir de 0</div>
 );
 
 const DisplayFirstElement = () => {
