@@ -8,7 +8,7 @@ $notes = [1, 16, 7, 18, 6, 12, 14, 20];
 
 const Hint = () => (
   <div>
-    Pour compter les éléments du tableau, on peut utiliser la fonction{" "}
+    Pour compter les éléments du tableau, utilisez la fonction{" "}
     <a href="https://www.php.net/manual/en/function.count" target="_blank">
       count
     </a>
