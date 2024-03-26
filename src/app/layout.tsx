@@ -3,6 +3,7 @@ import { Raleway } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import GithubIcon from "@/components/utils/GithubIcon";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Raleway({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             </a>
           </footer>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
