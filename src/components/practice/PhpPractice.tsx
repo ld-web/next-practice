@@ -1,17 +1,10 @@
-import {
-  FormEvent,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FormEvent, ReactNode, useContext, useEffect, useState } from "react";
 import PhpEditor from "../editor/PhpEditor";
 import { PhpContext } from "@/context/PhpContext";
-import CheckBadge from "../utils/CheckBadge";
-import ExclamationCircle from "../utils/ExclamationCircle";
-import LightBulb from "../utils/LightBulb";
-import Loading from "../utils/Loading";
+import SubmitButton from "./SubmitButton";
+import Hint from "./Hint";
+import Output from "./Output";
+import { delay } from "@/utils";
 
 interface PhpPracticeProps {
   initialCode: string;
@@ -34,16 +27,6 @@ const PhpPractice = ({
   const [displayHint, setDisplayHint] = useState(false);
 
   const php = useContext(PhpContext);
-
-  const cssClasses = useMemo(() => {
-    if (success === null) {
-      return "bg-orange-500 hover:bg-orange-700";
-    }
-
-    return success
-      ? "bg-green-500 hover:bg-green-700"
-      : "bg-red-500 hover:bg-red-700";
-  }, [success]);
 
   useEffect(() => {
     if (output.length > 0 && !loading) {
@@ -72,7 +55,7 @@ const PhpPractice = ({
     setDisplayHint(false);
     setError(false);
     setSuccess(null);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await delay(850);
 
     if (checkCode(code)) {
       const retVal: any = await php.run(code);
@@ -99,40 +82,11 @@ const PhpPractice = ({
           <PhpEditor code={code} onCodeChange={onCodeChange} />
         </div>
         <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`${cssClasses} px-3 text-white w-full font-bold uppercase py-4 text-xl flex justify-center items-center disabled:bg-gray-400 transition-all duration-300`}
-          >
-            {loading && <Loading />}
-            {success && <CheckBadge />}
-            {success === false && (
-              <>
-                <ExclamationCircle /> Réessayer
-              </>
-            )}
-            {success && "OK"}
-            {success === null && !loading && "Tester"}
-          </button>
+          <SubmitButton loading={loading} success={success} />
         </div>
       </form>
-      {displayHint && (
-        <div className="mt-2 bg-blue-600 p-3 text-gray-200 flex items-start gap-x-2">
-          <span>
-            <LightBulb />
-          </span>
-          <div className="hint">{hint}</div>
-        </div>
-      )}
-      {output.length > 0 && !loading && (
-        <pre
-          className={`max-w-full text-wrap mt-2 border-[1px] p-3 border-gray-500 leading-5 max-h-72 overflow-y-scroll${
-            error ? " border-red-600 text-red-600 bg-red-100 font-bold" : ""
-          }`}
-        >
-          {output.map((line) => `${line}\n`)}
-        </pre>
-      )}
+      {displayHint && <Hint hint={hint} />}
+      {output.length > 0 && !loading && <Output lines={output} error={error} />}
     </div>
   );
 };
