@@ -18,7 +18,7 @@ const Hint = () => (
 );
 
 const ForLoop = () => {
-  const checkCode = (code: string) => true;
+  const checkCode = (code: string) => code.match(/for\s*\(/) !== null;
 
   const checkResult = (output: string[]): boolean => {
     return output.length === 7;
@@ -35,7 +35,8 @@ const ForLoop = () => {
         <br />
         <strong>
           Affichez un utilisateur par ligne : utilisez la constante{" "}
-          <span>PHP_EOL</span> pour revenir à la ligne
+          <span className="bg-slate-300 dark:bg-slate-800 p-1">PHP_EOL</span>{" "}
+          pour revenir à la ligne
         </strong>
       </Enonce>
       <PhpPractice
