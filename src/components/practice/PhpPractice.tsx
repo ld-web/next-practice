@@ -11,6 +11,7 @@ import { PhpContext } from "@/context/PhpContext";
 import CheckBadge from "../utils/CheckBadge";
 import ExclamationCircle from "../utils/ExclamationCircle";
 import LightBulb from "../utils/LightBulb";
+import Loading from "../utils/Loading";
 
 interface PhpPracticeProps {
   initialCode: string;
@@ -25,6 +26,7 @@ const PhpPractice = ({
   checkCode,
   checkOutput,
 }: PhpPracticeProps) => {
+  const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState<string[]>([]);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState<boolean | null>(null);
@@ -44,10 +46,10 @@ const PhpPractice = ({
   }, [success]);
 
   useEffect(() => {
-    if (output.length > 0) {
+    if (output.length > 0 && !loading) {
       setSuccess(checkOutput(output));
     }
-  }, [output, checkOutput]);
+  }, [output, loading, checkOutput]);
 
   const onCodeChange = (value: string) => setCode(value);
 
@@ -60,6 +62,7 @@ const PhpPractice = ({
 
   const submitCode = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     if (php) {
       php.addEventListener("output", feedOutput);
@@ -69,6 +72,8 @@ const PhpPractice = ({
     setDisplayHint(false);
     setError(false);
     setSuccess(null);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     if (checkCode(code)) {
       const retVal: any = await php.run(code);
       if (retVal > 0) {
@@ -84,6 +89,7 @@ const PhpPractice = ({
     if (php) {
       php.removeEventListener("output", feedOutput);
     }
+    setLoading(false);
   };
 
   return (
@@ -95,11 +101,18 @@ const PhpPractice = ({
         <div>
           <button
             type="submit"
+            disabled={loading}
             className={`${cssClasses} px-3 text-white w-full font-bold uppercase py-4 text-xl flex justify-center items-center disabled:bg-gray-400 transition-all duration-300`}
           >
+            {loading && <Loading />}
             {success && <CheckBadge />}
-            {success === false && <ExclamationCircle />}
-            {success ? "OK" : "Tester"}
+            {success === false && (
+              <>
+                <ExclamationCircle /> Réessayer
+              </>
+            )}
+            {success && "OK"}
+            {success === null && !loading && "Tester"}
           </button>
         </div>
       </form>
@@ -111,7 +124,7 @@ const PhpPractice = ({
           <div className="hint">{hint}</div>
         </div>
       )}
-      {output.length > 0 && (
+      {output.length > 0 && !loading && (
         <pre
           className={`max-w-full text-wrap mt-2 border-[1px] p-3 border-gray-500 leading-5 max-h-72 overflow-y-scroll${
             error ? " border-red-600 text-red-600 bg-red-100 font-bold" : ""
