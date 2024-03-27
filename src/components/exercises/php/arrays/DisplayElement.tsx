@@ -14,7 +14,7 @@ const Hint = () => (
 );
 
 const DisplayElement = () => {
-  const checkCode = (code: string) => code.indexOf("echo $notes[3]") > 0;
+  const checkCode = (code: string) => code.match(/\$notes\s*\[3\]/) !== null;
 
   const checkResult = (output: string[]): boolean => {
     return output.length === 1 && output[0] === "18";
