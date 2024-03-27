@@ -18,8 +18,7 @@ const Hint = () => (
 );
 
 const DisplayLastElement = () => {
-  const checkCode = (code: string) =>
-    code.indexOf("echo $notes[count($notes) - 1]") > 0;
+  const checkCode = (code: string) => code.indexOf("count") > 0;
 
   const checkResult = (output: string[]): boolean => {
     return output.length === 1 && output[0] === "20";
