@@ -8,7 +8,6 @@ import ThemeSwitcher from "@/components/utils/ThemeSwitcher";
 import DisplayElement from "@/components/exercises/php/arrays/DisplayElement";
 import DisplayFirstElement from "@/components/exercises/php/arrays/DisplayFirstElement";
 import DisplayLastElement from "@/components/exercises/php/arrays/DisplayLastElement";
-import Link from "next/link";
 import Anchor from "@/components/utils/Anchor";
 import ForLoop from "@/components/exercises/php/loops/ForLoop";
 
