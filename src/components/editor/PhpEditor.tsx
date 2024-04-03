@@ -1,5 +1,3 @@
-"use client";
-
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-php";
