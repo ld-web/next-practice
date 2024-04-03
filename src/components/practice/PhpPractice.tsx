@@ -1,18 +1,11 @@
-import {
-  FormEvent,
-  ReactNode,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { FormEvent, ReactNode, useContext, useEffect, useReducer } from "react";
 import PhpEditor from "../editor/PhpEditor";
 import { PhpContext } from "@/context/PhpContext";
 import SubmitButton from "./SubmitButton";
 import Hint from "./Hint";
 import Output from "./Output";
 import { delay } from "@/utils";
-import { practiceStateReducer } from "./state";
+import { PracticeAction, practiceReducer } from "./state";
 
 interface PhpPracticeProps {
   initialCode: string;
@@ -27,21 +20,23 @@ const PhpPractice = ({
   checkCode = () => true,
   checkOutput,
 }: PhpPracticeProps) => {
-  const [state, dispatch] = useReducer(practiceStateReducer, "init");
-  const [output, setOutput] = useState<string[]>([]);
-  const [code, setCode] = useState(initialCode);
+  const [practice, dispatch] = useReducer(practiceReducer, {
+    output: [],
+    code: initialCode,
+    status: "init",
+  });
 
   const php = useContext(PhpContext);
 
   useEffect(() => {
-    if (state === "executed") {
-      if (checkOutput(output)) {
-        dispatch("succeed");
+    if (practice.status === "executed") {
+      if (checkOutput(practice.output)) {
+        dispatch({ type: PracticeAction.STATUS, payload: "success" });
       } else {
-        dispatch("fail");
+        dispatch({ type: PracticeAction.STATUS, payload: "failed" });
       }
     }
-  }, [output, state, checkOutput]);
+  }, [practice.status, practice.output, checkOutput]);
 
   const removePhpOutputListener = () => {
     if (php) {
@@ -49,19 +44,19 @@ const PhpPractice = ({
     }
   };
 
-  const onCodeChange = (value: string) => setCode(value);
+  const onCodeChange = (value: string) =>
+    dispatch({ type: PracticeAction.CODE, payload: value });
 
   const feedOutput = (event: any) => {
     const lines = event.detail
       .map((line: string) => line.replace("\n", ""))
       .filter((line: string) => line !== "");
-    setOutput((output) => [...output, ...lines]);
+    dispatch({ type: PracticeAction.OUTPUT, payload: lines });
   };
 
   const submitCode = async (e: FormEvent) => {
     e.preventDefault();
-    dispatch("run");
-    setOutput([]);
+    dispatch({ type: PracticeAction.RUN });
 
     if (php) {
       php.addEventListener("output", feedOutput);
@@ -69,37 +64,37 @@ const PhpPractice = ({
 
     await delay(850);
 
-    if (!checkCode(code)) {
-      dispatch("fail");
+    if (!checkCode(practice.code)) {
+      dispatch({ type: PracticeAction.STATUS, payload: "failed" });
       removePhpOutputListener();
       return;
     }
 
-    const retVal: any = await php.run(code);
+    const retVal: any = await php.run(practice.code);
 
     if (retVal > 0) {
-      dispatch("error");
+      dispatch({ type: PracticeAction.STATUS, payload: "error" });
       removePhpOutputListener();
       return;
     }
 
     removePhpOutputListener();
-    dispatch("finished");
+    dispatch({ type: PracticeAction.STATUS, payload: "executed" });
   };
 
   return (
     <div>
       <form onSubmit={submitCode}>
         <div>
-          <PhpEditor code={code} onCodeChange={onCodeChange} />
+          <PhpEditor code={practice.code} onCodeChange={onCodeChange} />
         </div>
         <div>
-          <SubmitButton state={state} />
+          <SubmitButton status={practice.status} />
         </div>
       </form>
-      {state === "failed" && <Hint hint={hint} />}
-      {output.length > 0 && state !== "running" && (
-        <Output lines={output} error={state === "error"} />
+      {practice.status === "failed" && <Hint hint={hint} />}
+      {practice.output.length > 0 && practice.status !== "running" && (
+        <Output lines={practice.output} error={practice.status === "error"} />
       )}
     </div>
   );

@@ -1,37 +1,74 @@
 import { Reducer } from "react";
 
-export type State =
+export type Status =
   | "init"
   | "running"
-  | "verifying"
   | "success"
   | "error"
   | "failed"
   | "executed";
 
-export type Action =
-  | "run"
-  | "fail"
-  | "error"
-  | "verify"
-  | "succeed"
-  | "finished";
+interface PracticeState {
+  status: Status;
+  output: string[];
+  code: string;
+}
 
-export const practiceStateReducer: Reducer<State, Action> = (state, action) => {
-  switch (action) {
-    case "run":
-      return "running";
-    case "verify":
-      return "verifying";
-    case "fail":
-      return "failed";
-    case "error":
-      return "error";
-    case "succeed":
-      return "success";
-    case "finished":
-      return "executed";
+export enum PracticeAction {
+  RUN = "RUN",
+  STATUS = "STATUS",
+  OUTPUT = "OUTPUT",
+  CODE = "CODE",
+}
+
+type PracticePayload = {
+  [PracticeAction.RUN]: undefined;
+  [PracticeAction.STATUS]: Status;
+  [PracticeAction.OUTPUT]: string[];
+  [PracticeAction.CODE]: string;
+};
+
+type ActionMap<Payload extends { [index: string]: any }> = {
+  [Action in keyof Payload]: Payload[Action] extends undefined
+    ? { type: Action }
+    : { type: Action; payload: Payload[Action] };
+};
+
+export type PracticeActions =
+  ActionMap<PracticePayload>[keyof ActionMap<PracticePayload>];
+
+export const practiceReducer: Reducer<PracticeState, PracticeActions> = (
+  state,
+  action
+) => {
+  switch (action.type) {
+    case PracticeAction.RUN:
+      return {
+        ...state,
+        output: [],
+        status: "running",
+      };
+    case PracticeAction.STATUS:
+      return {
+        ...state,
+        status: action.payload,
+      };
+    case PracticeAction.CODE:
+      return {
+        ...state,
+        code: action.payload,
+      };
+    case PracticeAction.OUTPUT:
+      const newOutput = [...state.output, ...action.payload];
+      return {
+        ...state,
+        output: newOutput,
+      };
     default:
-      return "init";
+      return {
+        output: [],
+        code: "",
+        status: "init",
+      };
   }
 };

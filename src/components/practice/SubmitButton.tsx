@@ -2,17 +2,17 @@ import { useMemo } from "react";
 import Loading from "../utils/Loading";
 import CheckBadge from "../utils/CheckBadge";
 import ExclamationCircle from "../utils/ExclamationCircle";
-import { State } from "./state";
+import { Status } from "./state";
 
 interface SubmitButtonProps {
-  state: State;
+  status: Status;
 }
 
-const SubmitButton = ({ state }: SubmitButtonProps) => {
-  const noPass = state === "failed" || state === "error";
+const SubmitButton = ({ status }: SubmitButtonProps) => {
+  const noPass = status === "failed" || status === "error";
 
   const cssClasses = useMemo(() => {
-    switch (state) {
+    switch (status) {
       case "success":
         return "bg-green-500 hover:bg-green-700";
       case "error":
@@ -21,21 +21,21 @@ const SubmitButton = ({ state }: SubmitButtonProps) => {
       default:
         return "bg-orange-500 hover:bg-orange-700";
     }
-  }, [state]);
+  }, [status]);
 
   return (
     <button
       type="submit"
-      disabled={state === "running"}
+      disabled={status === "running"}
       className={`${cssClasses} px-3 text-white w-full font-bold uppercase py-4 text-xl flex justify-center items-center disabled:bg-gray-400 transition-all duration-300`}
     >
       {/* Icon */}
-      {state === "running" && <Loading />}
-      {state === "success" && <CheckBadge />}
+      {status === "running" && <Loading />}
+      {status === "success" && <CheckBadge />}
       {noPass && <ExclamationCircle />}
       {/* Label */}
-      {state === "init" && "Tester"}
-      {state === "success" && "OK"}
+      {status === "init" && "Tester"}
+      {status === "success" && "OK"}
       {noPass && "Réessayer"}
     </button>
   );
