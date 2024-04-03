@@ -1,10 +1,18 @@
-import { FormEvent, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import PhpEditor from "../editor/PhpEditor";
 import { PhpContext } from "@/context/PhpContext";
 import SubmitButton from "./SubmitButton";
 import Hint from "./Hint";
 import Output from "./Output";
 import { delay } from "@/utils";
+import { practiceStateReducer } from "./state";
 
 interface PhpPracticeProps {
   initialCode: string;
@@ -16,23 +24,30 @@ interface PhpPracticeProps {
 const PhpPractice = ({
   initialCode,
   hint,
-  checkCode,
+  checkCode = () => true,
   checkOutput,
 }: PhpPracticeProps) => {
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(practiceStateReducer, "init");
   const [output, setOutput] = useState<string[]>([]);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState<boolean | null>(null);
   const [code, setCode] = useState(initialCode);
-  const [displayHint, setDisplayHint] = useState(false);
 
   const php = useContext(PhpContext);
 
   useEffect(() => {
-    if (output.length > 0 && !loading) {
-      setSuccess(checkOutput(output));
+    if (state === "executed") {
+      if (checkOutput(output)) {
+        dispatch("succeed");
+      } else {
+        dispatch("fail");
+      }
     }
-  }, [output, loading, checkOutput]);
+  }, [output, state, checkOutput]);
+
+  const removePhpOutputListener = () => {
+    if (php) {
+      php.removeEventListener("output", feedOutput);
+    }
+  };
 
   const onCodeChange = (value: string) => setCode(value);
 
@@ -45,34 +60,31 @@ const PhpPractice = ({
 
   const submitCode = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch("run");
+    setOutput([]);
 
     if (php) {
       php.addEventListener("output", feedOutput);
     }
 
-    setOutput([]);
-    setDisplayHint(false);
-    setError(false);
-    setSuccess(null);
     await delay(850);
 
-    if (checkCode(code)) {
-      const retVal: any = await php.run(code);
-      if (retVal > 0) {
-        setError(true);
-      }
-    } else {
-      if (hint) {
-        setDisplayHint(true);
-      }
-      setSuccess(false);
+    if (!checkCode(code)) {
+      dispatch("fail");
+      removePhpOutputListener();
+      return;
     }
 
-    if (php) {
-      php.removeEventListener("output", feedOutput);
+    const retVal: any = await php.run(code);
+
+    if (retVal > 0) {
+      dispatch("error");
+      removePhpOutputListener();
+      return;
     }
-    setLoading(false);
+
+    removePhpOutputListener();
+    dispatch("finished");
   };
 
   return (
@@ -82,11 +94,13 @@ const PhpPractice = ({
           <PhpEditor code={code} onCodeChange={onCodeChange} />
         </div>
         <div>
-          <SubmitButton loading={loading} success={success} />
+          <SubmitButton state={state} />
         </div>
       </form>
-      {displayHint && <Hint hint={hint} />}
-      {output.length > 0 && !loading && <Output lines={output} error={error} />}
+      {state === "failed" && <Hint hint={hint} />}
+      {output.length > 0 && state !== "running" && (
+        <Output lines={output} error={state === "error"} />
+      )}
     </div>
   );
 };
