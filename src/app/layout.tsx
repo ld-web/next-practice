@@ -26,7 +26,7 @@ export default function RootLayout({
           {children}
           <footer className="text-center flex justify-center gap-x-4">
             LD-WEB
-            <a href="https://github.com/ld-web" target="_blank">
+            <a href="https://github.com/ld-web/next-practice" target="_blank">
               <GithubIcon />
             </a>
           </footer>
