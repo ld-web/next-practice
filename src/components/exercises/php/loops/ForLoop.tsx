@@ -21,7 +21,9 @@ const ForLoop = () => {
   const checkCode = (code: string) => code.match(/for\s*\(/) !== null;
 
   const checkResult = (output: string[]): boolean => {
-    return output.length === 7;
+    return (
+      output.length === 7 && output[0] === "Amanda" && output[6] === "Calvin"
+    );
   };
 
   return (
