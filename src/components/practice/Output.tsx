@@ -17,7 +17,12 @@ const Output = ({ lines, error }: OutputProps) => {
     return classes;
   }, [error]);
 
-  return <pre className={cssClasses}>{lines.map((l) => `${l}\n`)}</pre>;
+  return (
+    <div className="mt-2">
+      <p className="text-sm">Sortie du script :</p>
+      <pre className={cssClasses}>{lines.map((l) => `${l}\n`)}</pre>
+    </div>
+  );
 };
 
 export default Output;
