@@ -1,5 +1,6 @@
 const Loading = () => (
   <svg
+    data-testid="loading"
     className="animate-spin -ml-1 mr-3 h-7 w-7 text-white"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
