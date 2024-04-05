@@ -25,7 +25,20 @@ const DisplayFirstElement = () => {
       >
         Afficher le premier élément <Anchor id="display-first-element" />
       </h3>
-      <Enonce>Affichez le 1er élément du tableau de notes ci-dessous</Enonce>
+      <Enonce>
+        Affichez le 1er élément du tableau de notes ci-dessous
+        <p>
+          N&apos;utilisez pas{" "}
+          <a
+            href="https://www.php.net/manual/en/function.reset"
+            target="_blank"
+            className="bg-slate-300 dark:bg-slate-800 p-1 font-bold underline"
+          >
+            reset
+          </a>
+          , accédez directement à l&apos;élément avec son index.
+        </p>
+      </Enonce>
       <PhpPractice
         initialCode={initialCode}
         hint={<Hint />}
