@@ -36,7 +36,17 @@ const DisplayLastElement = () => {
         Affichez le dernier élément du tableau de notes ci-dessous.
         <br />
         Utilisez une fonction de la SPL (Standard PHP Library) vous permettant
-        de récupérer le nombre d&apos;éléments du tableau
+        de récupérer le nombre d&apos;éléments du tableau.
+        <br />
+        <strong>Note : </strong>N&apos;utilisez pas{" "}
+        <a
+          href="https://www.php.net/manual/en/function.end"
+          target="_blank"
+          className="bg-slate-300 dark:bg-slate-800 p-1 underline underline-offset-4"
+        >
+          end
+        </a>
+        &nbsp;pour valider l&apos;exercice
       </Enonce>
       <PhpPractice
         initialCode={initialCode}
