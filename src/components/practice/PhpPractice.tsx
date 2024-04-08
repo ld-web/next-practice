@@ -6,16 +6,19 @@ import Hint from "./Hint";
 import Output from "./Output";
 import { delay } from "@/utils";
 import { PracticeAction, practiceReducer } from "./state";
+import { EDITOR_LINES_DEFAULT } from "@/constants";
 
 interface PhpPracticeProps {
   initialCode: string;
+  lines?: number;
   hint?: ReactNode;
-  checkCode: (code: string) => boolean;
+  checkCode?: (code: string) => boolean;
   checkOutput: (output: string[]) => boolean;
 }
 
 const PhpPractice = ({
   initialCode,
+  lines = EDITOR_LINES_DEFAULT,
   hint,
   checkCode = () => true,
   checkOutput,
@@ -86,7 +89,11 @@ const PhpPractice = ({
     <div>
       <form onSubmit={submitCode}>
         <div>
-          <PhpEditor code={practice.code} onCodeChange={onCodeChange} />
+          <PhpEditor
+            code={practice.code}
+            onCodeChange={onCodeChange}
+            lines={lines}
+          />
         </div>
         <div>
           <SubmitButton status={practice.status} />
