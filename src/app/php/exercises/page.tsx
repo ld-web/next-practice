@@ -7,6 +7,7 @@ import DisplayLastElement from "@/components/exercises/php/arrays/DisplayLastEle
 import ForLoop from "@/components/exercises/php/loops/ForLoop";
 import usePhp from "@/hooks/usePhp";
 import Section from "@/components/exercises/Section";
+import WhileLoop from "@/components/exercises/php/loops/WhileLoop";
 
 export default function Exercises() {
   const php = usePhp();
@@ -21,6 +22,7 @@ export default function Exercises() {
 
       <Section title="Les boucles" id="les-boucles">
         <ForLoop />
+        <WhileLoop />
       </Section>
     </PhpContext.Provider>
   );
