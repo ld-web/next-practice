@@ -32,7 +32,7 @@ const DisplayFirstElement = () => {
           <a
             href="https://www.php.net/manual/en/function.reset"
             target="_blank"
-            className="bg-slate-300 dark:bg-slate-800 p-1 font-bold underline"
+            className="bg-slate-300 dark:bg-slate-800 p-1 underline underline-offset-4"
           >
             reset
           </a>
