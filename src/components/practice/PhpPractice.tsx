@@ -1,3 +1,5 @@
+"use client";
+
 import { FormEvent, ReactNode, useContext, useEffect, useReducer } from "react";
 import PhpEditor from "../editor/PhpEditor";
 import { PhpContext } from "@/context/PhpContext";
@@ -7,6 +9,7 @@ import Output from "./Output";
 import { delay } from "@/utils";
 import { PracticeAction, practiceReducer } from "./state";
 import { EDITOR_LINES_DEFAULT } from "@/constants";
+import Loading from "../utils/Loading";
 
 interface PhpPracticeProps {
   initialCode: string;
@@ -29,7 +32,7 @@ const PhpPractice = ({
     status: "init",
   });
 
-  const php = useContext(PhpContext);
+  const { phpWasm: php, loading } = useContext(PhpContext);
 
   useEffect(() => {
     if (practice.status === "executed") {
@@ -84,6 +87,14 @@ const PhpPractice = ({
     removePhpOutputListener();
     dispatch({ type: PracticeAction.STATUS, payload: "executed" });
   };
+
+  if (loading) {
+    return (
+      <div className="pt-8 flex justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>

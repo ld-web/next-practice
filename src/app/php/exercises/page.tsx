@@ -1,19 +1,13 @@
-"use client";
-
-import { PhpContext } from "@/context/PhpContext";
-import DisplayElement from "@/components/exercises/php/arrays/DisplayElement";
-import DisplayFirstElement from "@/components/exercises/php/arrays/DisplayFirstElement";
-import DisplayLastElement from "@/components/exercises/php/arrays/DisplayLastElement";
-import ForLoop from "@/components/exercises/php/loops/ForLoop";
-import usePhp from "@/hooks/usePhp";
 import Section from "@/components/exercises/Section";
-import WhileLoop from "@/components/exercises/php/loops/WhileLoop";
+import DisplayFirstElement from "./DisplayFirstElement";
+import DisplayElement from "./DisplayElement";
+import DisplayLastElement from "./DisplayLastElement";
+import ForLoop from "./ForLoop";
+import WhileLoop from "./WhileLoop";
 
 export default function Exercises() {
-  const php = usePhp();
-
   return (
-    <PhpContext.Provider value={php}>
+    <div>
       <Section title="Les tableaux" id="les-tableaux">
         <DisplayFirstElement />
         <DisplayElement />
@@ -24,6 +18,6 @@ export default function Exercises() {
         <ForLoop />
         <WhileLoop />
       </Section>
-    </PhpContext.Provider>
+    </div>
   );
 }

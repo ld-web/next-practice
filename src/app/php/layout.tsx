@@ -1,4 +1,5 @@
 import ThemeSwitcher from "@/components/utils/ThemeSwitcher";
+import { PhpProvider } from "@/context/PhpContext";
 import { ReactNode } from "react";
 
 export default function PhpLayout({ children }: { children: ReactNode }) {
@@ -9,7 +10,7 @@ export default function PhpLayout({ children }: { children: ReactNode }) {
         <ThemeSwitcher />
       </header>
 
-      {children}
+      <PhpProvider>{children}</PhpProvider>
     </section>
   );
 }
