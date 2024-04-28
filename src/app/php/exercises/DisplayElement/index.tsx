@@ -1,20 +1,19 @@
-import Header from "@/components/exercises/Header";
-import Statement, { meta } from "./statement.mdx";
+import MdxStatement from "./statement.mdx";
 import Hint from "./hint.mdx";
-import path from "path";
 import Practice from "./Practice";
-import { getCode } from "../../utils";
-
-const codePath = "src/app/php/exercises/DisplayElement/initialCode.php";
+import usePhpExercise from "@/hooks/usePhpExercise";
+import PhpExercise from "@/components/exercises/PhpExercise";
 
 const DisplayElement = async () => {
-  const initialCode = await getCode(path.join(process.cwd(), codePath));
+  const { initialCode, metadata } = await usePhpExercise(
+    "src/app/php/exercises/DisplayElement/initialCode.php",
+    "src/app/php/exercises/DisplayElement/statement.mdx"
+  );
 
   return (
-    <div className="mb-8">
-      <Header StatementJsx={Statement} meta={meta} />
+    <PhpExercise metadata={metadata} Statement={MdxStatement}>
       <Practice initialCode={initialCode} hints={<Hint />} />
-    </div>
+    </PhpExercise>
   );
 };
 

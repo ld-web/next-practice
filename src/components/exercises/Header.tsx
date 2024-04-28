@@ -1,21 +1,20 @@
 import Anchor from "@/components/utils/Anchor";
-import { StatementMeta } from "@/index";
-import Statement from "@/components/exercises/Statement";
 
 interface HeaderProps {
-  StatementJsx: React.ComponentType;
-  meta: StatementMeta;
+  title: string;
+  id: string;
+  children: React.ReactNode;
 }
 
-const Header = ({ StatementJsx, meta }: HeaderProps) => {
+const Header = ({ title, id, children }: HeaderProps) => {
   return (
     <div>
-      <h3 className="text-lg mb-2 font-bold uppercase" id={meta.id}>
-        {meta.title} <Anchor id={meta.id} />
+      <h3 className="text-lg mb-2 font-bold uppercase" id={id}>
+        {title} <Anchor id={id} />
       </h3>
-      <Statement>
-        <StatementJsx />
-      </Statement>
+      <div className="p-3 border-l-4 border-blue-500 bg-sky-100 dark:bg-slate-700">
+        {children}
+      </div>
     </div>
   );
 };
