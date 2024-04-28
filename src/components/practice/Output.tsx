@@ -20,7 +20,9 @@ const Output = ({ lines, error }: OutputProps) => {
   return (
     <div className="mt-2">
       <p className="text-sm">Sortie du script :</p>
-      <pre className={cssClasses}>{lines.map((l) => `${l}\n`)}</pre>
+      <pre className={cssClasses} role="alert">
+        {lines.map((l) => `${l}\n`)}
+      </pre>
     </div>
   );
 };
