@@ -8,7 +8,7 @@ export type Status =
   | "failed"
   | "executed";
 
-interface PracticeState {
+export interface PracticeState {
   status: Status;
   output: string[];
   code: string;
