@@ -1,15 +1,15 @@
 import MdxStatement from "./statement.mdx";
 import Hint from "./hint.mdx";
 import Practice from "./Practice";
-import usePhpExercise from "@/hooks/usePhpExercise";
 import PhpExercise from "@/components/exercises/PhpExercise";
+import initialCode from "./initialCode.php";
+
+const metadata = {
+  title: "Afficher un élément",
+  id: "display-element",
+};
 
 const DisplayElement = async () => {
-  const { initialCode, metadata } = await usePhpExercise(
-    "src/app/php/exercises/DisplayElement/initialCode.php",
-    "src/app/php/exercises/DisplayElement/statement.mdx"
-  );
-
   return (
     <PhpExercise metadata={metadata} Statement={MdxStatement}>
       <Practice initialCode={initialCode} hints={<Hint />} />

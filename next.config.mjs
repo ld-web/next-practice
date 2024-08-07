@@ -1,5 +1,4 @@
 import createMDX from "@next/mdx";
-import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 /** @type {import('next').NextConfig} */
@@ -7,15 +6,19 @@ const nextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   reactStrictMode: true,
   webpack: function (config, options) {
-    config.module.rules.push({
-      test: /\.\/node_modules\/php-wasm\/php-web\.*/i,
-      loader: "file-loader",
-    });
+    config.module.rules.push(
+      {
+        test: /\.\/node_modules\/php-wasm\/php-web\.*/i,
+        loader: "file-loader",
+      },
+      {
+        test: /\.php$/i,
+        use: {
+          loader: "raw-loader",
+        },
+      }
+    );
 
-    // config.experiments = {
-    //   asyncWebAssembly: true,
-    //   layers: true,
-    // };
     return config;
   },
 };
@@ -23,8 +26,7 @@ const nextConfig = {
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
-    rehypePlugins: [],
+    remarkPlugins: [remarkMdxFrontmatter],
   },
 });
 

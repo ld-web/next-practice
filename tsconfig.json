@@ -20,7 +20,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "mdx"]
+    "types": ["vitest/globals", "mdx", "./src/php.d.ts"]
   },
   "include": [
     "next-env.d.ts",
